@@ -5,12 +5,17 @@ inputs:
   filters:
     description: 'Specify filter rules'
     required: true
+  event:
+    description: 'Github event name. (github.event_name)'
+    default: ${{ github.event_name }}
   base:
     description: 'SHA of base commit to compare'
     default: ${{ github.event.pull_request.base.sha }}
   head:
     description: 'SHA of head commit to compare'
-    default: ${{ github.event.pull_request.head.sha }}
+    default: ${{ github.event.pull_request.head.sha || github.sha }}
+  head-ref:
+    description: 'ref of the head commit to compare (mainly for testing the action)'
 runs:
   using: 'node12'
   main: 'dist/index.js'
