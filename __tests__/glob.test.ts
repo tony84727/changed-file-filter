@@ -25,6 +25,14 @@ describe('globber returned by newGlobber', () => {
         ['src/BUILD', false],
         ['BUILD.bazel', true]
       ]
+    },
+    {
+      globRules: ['src/**/*'],
+      expectedMatches: [
+        ['file', false],
+        ['src/file', true],
+        ['src/nested/file', true]
+      ]
     }
   ]
   it('matches paths correclty', () => {
