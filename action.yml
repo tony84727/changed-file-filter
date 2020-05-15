@@ -1,10 +1,16 @@
-name: 'Your name here'
-description: 'Provide a description here'
-author: 'Your name or organization here'
+name: 'Changed File Filter'
+description: 'Only run the job when specific file changed'
+author: 'tony84727'
 inputs:
-  myInput:              # change this
-    description: 'input description here'
-    default: 'default value if applicable'
+  filters:
+    description: 'Specify filter rules'
+    required: true
+  base:
+    description: 'SHA of base commit to compare'
+    default: ${{ github.event.pull_request.base.sha }}
+  head:
+    description: 'SHA of head commit to compare'
+    default: ${{ github.event.pull_request.head.sha }}
 runs:
   using: 'node12'
   main: 'dist/index.js'
