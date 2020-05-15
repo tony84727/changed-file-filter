@@ -1,0 +1,31 @@
+# test that run on each push to test the action in push workflow
+name: 'push-test'
+on: ['push']
+
+jobs:
+  push-test-1:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    # add a fake commit
+    - name: Add Commit
+      run: | 
+        mkdir testzone && \
+        touch testzone/touched.txt && \
+        git config user.name 'Github Action' && \
+        git config user.email 'action@github.com' && \
+        git add testzone/touched.txt && \
+        git commit -m "add testzone/touched.txt"
+    - uses: ./
+      id: filter
+      with:
+        head-ref: HEAD
+        filters: |
+          test:
+            - 'testzone/*.txt'
+          should-not-changed:
+            - 'not-exsits'
+    - name: Check Output
+      run: |
+        [[ "${{ steps.filter.outputs.test}}" = "true" ]] && \
+        [[ "${{ steps.filter.outputs.should-not-changed }}" = "false" ]]

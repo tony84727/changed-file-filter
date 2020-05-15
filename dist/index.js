@@ -1569,14 +1569,32 @@ function evaluateRule(rule, changedFiles) {
     const globber = glob_1.newGlobber(rule.match);
     return changedFiles.find(globber) !== undefined;
 }
+function getBaseSha(event) {
+    return __awaiter(this, void 0, void 0, function* () {
+        if (event === 'push') {
+            return git_1.revParse('HEAD^');
+        }
+        return core.getInput('base');
+    });
+}
+function getHeadSha() {
+    return __awaiter(this, void 0, void 0, function* () {
+        const headRef = core.getInput('head-ref');
+        if (headRef.length > 0) {
+            return git_1.revParse(headRef);
+        }
+        return core.getInput('head');
+    });
+}
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const baseSha = core.getInput('base');
-            const headSha = core.getInput('head');
+            const event = core.getInput('event');
+            yield git_1.unshallow();
+            const baseSha = yield getBaseSha(event);
+            const headSha = yield getHeadSha();
             core.debug(`baseSha: ${baseSha}`);
             core.debug(`headSha: ${headSha}`);
-            yield git_1.unshallow();
             const rules = rule_1.parseRules(core.getInput('filters'));
             const changedFiles = yield git_1.getChangedFiles(baseSha, headSha);
             core.debug(`changedFiles: ${changedFiles}`);
