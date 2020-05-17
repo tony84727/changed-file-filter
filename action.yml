@@ -1,5 +1,5 @@
 name: 'Changed File Filter'
-description: 'Output variables to indicate files changes between base and head commits. You can use those variables to determine if to run a job or step'
+description: 'Output variables to indicate files changes between base and head commits.'
 author: 'tony84727'
 inputs:
   filters:
