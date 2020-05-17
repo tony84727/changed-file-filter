@@ -1,5 +1,5 @@
 name: 'Changed File Filter'
-description: 'Only run the job when specific file changed'
+description: 'Output variables to indicate files changes between base and head commits. You can use those variables to determine if to run a job or step'
 author: 'tony84727'
 inputs:
   filters:
@@ -19,3 +19,6 @@ inputs:
 runs:
   using: 'node12'
   main: 'dist/index.js'
+branding:
+  color: blue
+  icon: filter
