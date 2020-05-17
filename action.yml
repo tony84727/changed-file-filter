@@ -1,5 +1,5 @@
 name: 'Changed File Filter'
-description: 'Output variables to indicate files changes between base and head commits.'
+description: 'Determine changed files between base and current(head) commits'
 author: 'tony84727'
 inputs:
   filters:
