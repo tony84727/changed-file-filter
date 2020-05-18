@@ -6,7 +6,7 @@ Determine changed files between base and current(head) commits.
 
 ## Usage
 
-The action accepts filter rules in `yaml` format. Each filter rules is a list of glob expressions. The action will create coresponding output variables to indicate if there's a changed file matches the glob expressions. You can use those variables in `if` clause to run specific jobs/steps when specific files changed.
+The action accepts filter rules in the YAML format. Each filter rule is a list of glob expressions. The action will create corresponding output variables to indicate if there's a changed file match the glob expressions. You can use those variables in the `if` clause to run specific jobs/steps when specific files changed.
 
 ```yaml
 ...
