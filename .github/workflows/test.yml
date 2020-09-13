@@ -49,4 +49,24 @@ jobs:
         head: 'HEAD'
     - name: Check Output
       run: '[[ "${{ steps.filter.outputs.test }}" = "true" ]]'
+  # test case of issue #7
+  test-3:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Advance Base
+        run: |
+          git config user.name 'Github Action' && \
+          git config user.email 'action@gmail.com' && \
+          touch testzone/added_by_other_pr.txt && \
+          git add testzone/added_by_other_pr.txt  && \
+          git commit -m "another merged PR"
+      - uses: ./
+        id: filter
+        with:
+          filters: |
+            test:
+              - testzone/*.txt
+      - name: Check Output
+        run: '[[ "${{ steps.filter.outputs.test }}" = "true"]]'
     
