@@ -69,5 +69,5 @@ jobs:
             test:
               - testzone/*.txt
       - name: Check Output
-        run: '[[ "${{ steps.filter.outputs.test }}" = "true"]]'
+        run: '[[ "${{ steps.filter.outputs.test }}" = "true" ]]'
     
