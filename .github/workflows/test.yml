@@ -69,7 +69,7 @@ jobs:
         with:
           # for testing, set the base to moved base, simulating the situation that the base changed (probably another PR
           # got merged into the master)
-          base: steps.move_base.outputs.base
+          base: ${{steps.move_base.outputs.base}}
           filters: |
             test:
               - testzone/*.txt
