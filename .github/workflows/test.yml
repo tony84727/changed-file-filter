@@ -54,20 +54,27 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Advance Base
+      - name: Move Base
+        id: move_base
         run: |
           git config user.name 'Github Action' && \
           git config user.email 'action@gmail.com' && \
           mkdir testzone && \
           touch testzone/added_by_other_pr.txt && \
           git add testzone/added_by_other_pr.txt  && \
-          git commit -m "another merged PR"
+          git commit -m "another merged PR" && \
+          echo "::set-output name=base::${git rev-parse HEAD}"
       - uses: ./
         id: filter
         with:
+          # for testing, set the base to moved base, simulating the situation that the base changed (probably another PR
+          # got merged into the master)
+          base: steps.move_base.outputs.base
           filters: |
             test:
               - testzone/*.txt
       - name: Check Output
-        run: '[[ "${{ steps.filter.outputs.test }}" = "true" ]]'
+        # Although "base" has a additional commit modifying the filter matching file "testzone/*.txt",
+        # the file is already merged in the "base"
+        run: '[[ "${{ steps.filter.outputs.test }}" = "false" ]]'
     
