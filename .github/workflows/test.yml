@@ -30,10 +30,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - name: Setup committer info
-      run:
-        - git config user.name 'Github Action'
-        - git config user.email 'action@github.com'
+    - name: Setup Committer Info
+      run: |
+        git config user.name 'Github Action' && \
+        git config user.email 'action@github.com'
     # add a fake commit
     - name: Add Commit
       run: | 
@@ -56,10 +56,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Setup committer info
-        run:
-          - git config user.name 'Github Action'
-          - git config user.email 'action@github.com'
+      - name: Setup Committer Info
+        run: |
+          git config user.name 'Github Action' && \
+          git config user.email 'action@github.com'
       - name: Add Commit
         run: |
           mkdir testzone && \
