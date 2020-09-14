@@ -63,7 +63,7 @@ jobs:
           touch testzone/added_by_other_pr.txt && \
           git add testzone/added_by_other_pr.txt  && \
           git commit -m "another merged PR" && \
-          echo "::set-output name=base::${git rev-parse HEAD}"
+          echo "::set-output name=base::$(git rev-parse HEAD)"
       - uses: ./
         id: filter
         with:
