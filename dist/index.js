@@ -1586,17 +1586,27 @@ function getHeadSha() {
         return core.getInput('head');
     });
 }
+function resolveMergeBase(event, baseSha, headSha) {
+    return __awaiter(this, void 0, void 0, function* () {
+        if (event === 'pull_request') {
+            return yield git_1.getMergeBase(baseSha, headSha);
+        }
+        return core.getInput('base');
+    });
+}
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const event = core.getInput('event');
             yield git_1.unshallow();
-            const baseSha = yield getBaseSha(event);
+            const branchBaseSha = yield getBaseSha(event);
             const headSha = yield getHeadSha();
-            core.debug(`baseSha: ${baseSha}`);
+            const mergeBase = yield (resolveMergeBase(event, branchBaseSha, headSha));
+            core.debug(`brancBaseSha: ${branchBaseSha}`);
             core.debug(`headSha: ${headSha}`);
+            core.debug(`mergeBase: ${mergeBase}`);
             const rules = rule_1.parseRules(core.getInput('filters'));
-            const changedFiles = yield git_1.getChangedFiles(baseSha, headSha);
+            const changedFiles = yield git_1.getChangedFiles(mergeBase, headSha);
             core.debug(`changedFiles: ${changedFiles}`);
             for (const r of rules) {
                 const changed = evaluateRule(r, changedFiles) ? 'true' : 'false';
@@ -2114,6 +2124,24 @@ function unshallow() {
     });
 }
 exports.unshallow = unshallow;
+function getMergeBase(baseSha, headSha, cwd) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return new Promise((resolve, reject) => {
+            try {
+                exec_1.exec('git', ['merge-base', `${baseSha}`, `${headSha}`], {
+                    cwd,
+                    listeners: {
+                        stdout: buffer => resolve(buffer.toString().trim())
+                    }
+                }).catch(reject);
+            }
+            catch (err) {
+                reject(err);
+            }
+        });
+    });
+}
+exports.getMergeBase = getMergeBase;
 
 
 /***/ }),

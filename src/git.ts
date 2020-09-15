@@ -44,3 +44,22 @@ export async function revParse(rev: string, cwd?: string): Promise<string> {
 export async function unshallow(): Promise<number> {
   return exec('git', ['fetch', '--prune', '--unshallow'])
 }
+
+export async function getMergeBase(
+  baseSha: string,
+  headSha: string,
+  cwd?: string
+): Promise<string> {
+  return new Promise((resolve, reject) => {
+    try {
+      exec('git', ['merge-base', `${baseSha}`, `${headSha}`], {
+        cwd,
+        listeners: {
+          stdout: buffer => resolve(buffer.toString().trim())
+        }
+      }).catch(reject)
+    } catch (err) {
+      reject(err)
+    }
+  })
+}
