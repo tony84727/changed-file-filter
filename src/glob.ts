@@ -20,5 +20,6 @@ function createGlobberPattern(rules: string[]): RegExp {
       to: '[^\\/\\\\]+'
     }
   ])
+  //console.log("regex = ^" + rules.map(replacer).join('|') + "$")
   return new RegExp(`^${rules.map(replacer).join('|')}$`)
 }

@@ -33,6 +33,41 @@ describe('globber returned by newGlobber', () => {
         ['src/file', true],
         ['src/nested/file', true]
       ]
+    },
+    {
+      globRules: ['src/**/(?<!ProjectVersion)'],
+      expectedMatches: [
+        ['file', false],
+        ['src/file', true],
+        ['src/nested/file', true],
+        ['src/ProjectVersion', false],
+        ['src/nested/ProjectVersion', false],
+      ]
+    },
+    {
+      globRules: ['.github/**/*'],
+      expectedMatches: [
+        ['.github/workflows/push.yaml', true],
+        ['.github/push.yaml', true],
+        ['github/push.yaml', false],
+        ['.gathub/push.yaml', false]
+      ]
+    },
+    {
+      globRules: ['*'],
+      expectedMatches: [
+        ['.github/workflows/push.yaml', false],
+        ['dockerBuild.sh', true],
+        ['a/b/c/d', false]
+      ]
+    },
+    {
+      globRules: ['./*'],
+      expectedMatches: [
+        ['.github/workflows/push.yaml', false],
+        ['dockerBuild.sh', true],
+        ['a/b/c/d', false]
+      ]
     }
   ]
   it('matches paths correclty', () => {
