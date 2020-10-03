@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - uses: tony84727/changed-file-filter@0.0.2
+    - uses: tony84727/changed-file-filter@0.0.3
       id: filter
       with:
         # head: optional head commit SHA, default to ${{ github.event.pull_request.head.sha || github.sha }}
