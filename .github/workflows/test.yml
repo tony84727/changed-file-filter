@@ -72,9 +72,9 @@ jobs:
         run: |
           git fetch --depth=1 origin ${{ github.event.pull_request.base.sha }} && \
           git checkout -b base ${{ github.event.pull_request.base.sha }} && \
-          mkdir testzone && \
-          touch testzone/added_by_other_pr.txt && \
-          git add testzone/added_by_other_pr.txt  && \
+          mkdir testzone_1 && \
+          touch testzone_1/added_by_other_pr.txt && \
+          git add testzone_1/added_by_other_pr.txt  && \
           git commit -m "another merged PR" && \
           echo "::set-output name=base::$(git rev-parse HEAD)" && \
           git checkout this_pr
@@ -86,11 +86,11 @@ jobs:
           base: ${{ steps.move_base.outputs.base }}
           filters: |
             this_pr:
-              - testzone/added_by_this_pr.txt
-            test:
               - testzone/*.txt
+            test:
+              - testzone_1/*.txt
       - name: Check Output
-        # Although "base" has a additional commit modifying the filter matching file "testzone/*.txt" (testzone/added_by_other_pr),
+        # Although "base" has a additional commit modifying the file matching  "testzone_1/*.txt" (testzone_1/added_by_other_pr.txt),
         # the file is already merged in the "base"
         run: '[[ "${{ steps.filter.outputs.test }}" = "false" && "${{ steps.filter.outputs.this_pr }}" = "true" ]]'
     
