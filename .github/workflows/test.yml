@@ -70,6 +70,7 @@ jobs:
       - name: Move Base
         id: move_base
         run: |
+          git fetch --depth=1 origin ${{ github.event.pull_request.base.sha }} && \
           git checkout -b base ${{ github.event.pull_request.base.sha }} && \
           touch testzone/added_by_other_pr.txt && \
           git add testzone/added_by_other_pr.txt  && \
