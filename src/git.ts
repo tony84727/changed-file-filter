@@ -1,29 +1,47 @@
 import {exec} from '@actions/exec'
 
-export async function getChangedFiles(
-  baseSha: string,
-  headSha: string,
+async function execForStdOut(
+  commandLine: string,
+  args?: string[],
   cwd?: string
-): Promise<string[]> {
+): Promise<string> {
   return new Promise((resolve, reject) => {
     try {
-      exec('git', ['diff', '--name-only', `${baseSha}..${headSha}`, '--'], {
+      exec(commandLine, args, {
         cwd,
         listeners: {
-          stdout: buffer =>
-            resolve(
-              buffer
-                .toString()
-                .split('\n')
-                .map(x => x.trim())
-                .filter(x => x.length > 0)
-            )
+          stdout: buffer => resolve(buffer.toString())
         }
       }).catch(reject)
     } catch (err) {
       reject(err)
     }
   })
+}
+async function getMergeBase(
+  shaA: string,
+  shaB: string,
+  cwd?: string
+): Promise<string> {
+  return execForStdOut('git', ['merge-base', shaA, shaB], cwd)
+}
+
+export async function getChangedFiles(
+  baseSha: string,
+  headSha: string,
+  cwd?: string
+): Promise<string[]> {
+  const mergeBase = (await getMergeBase(baseSha, headSha, cwd)).trim()
+  return (
+    await execForStdOut(
+      'git',
+      ['diff', '--name-only', `${mergeBase}..${headSha}`, '--'],
+      cwd
+    )
+  )
+    .split('\n')
+    .map(x => x.trim())
+    .filter(x => x.length > 0)
 }
 
 export async function revParse(rev: string, cwd?: string): Promise<string> {

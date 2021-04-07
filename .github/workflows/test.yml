@@ -30,13 +30,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
+    - name: Setup Committer Info
+      run: |
+        git config user.name 'Github Action' && \
+        git config user.email 'action@github.com'
     # add a fake commit
     - name: Add Commit
       run: | 
         mkdir testzone && \
         touch testzone/touched.txt && \
-        git config user.name 'Github Action' && \
-        git config user.email 'action@github.com' && \
         git add testzone/touched.txt && \
         git commit -m "add testzone/touched.txt"
     - uses: ./
@@ -49,4 +51,50 @@ jobs:
         head: 'HEAD'
     - name: Check Output
       run: '[[ "${{ steps.filter.outputs.test }}" = "true" ]]'
+  # test case of issue #7
+  test-3:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup Committer Info
+        run: |
+          git config user.name 'Github Action' && \
+          git config user.email 'action@github.com'
+      - name: Add Commit
+        id: add_commit
+        run: |
+          git fetch --depth=1 origin ${{ github.event.pull_request.base.sha }} && \
+          git checkout -b this_pr && \
+          mkdir testzone && \
+          touch testzone/added_by_this_pr.txt && \
+          git add testzone/added_by_this_pr.txt && \
+          git commit -m "add by this PR" && \
+          echo "::set-output name=head::$(git rev-parse HEAD)"
+      - name: Move Base
+        id: move_base
+        run: |
+          git fetch --depth=1 origin ${{ github.event.pull_request.base.sha }} && \
+          git checkout -b base ${{ github.event.pull_request.base.sha }} && \
+          mkdir testzone_1 && \
+          touch testzone_1/added_by_other_pr.txt && \
+          git add testzone_1/added_by_other_pr.txt  && \
+          git commit -m "another merged PR" && \
+          echo "::set-output name=base::$(git rev-parse HEAD)" && \
+          git checkout this_pr
+      - uses: ./
+        id: filter
+        with:
+          # for testing, set the base to moved base, simulating the situation that the base changed (probably another PR
+          # got merged into the master)
+          base: ${{ steps.move_base.outputs.base }}
+          head: ${{ steps.add_commit.outputs.head }}
+          filters: |
+            this_pr:
+              - testzone/*.txt
+            test:
+              - testzone_1/*.txt
+      - name: Check Output
+        # Although "base" has a additional commit modifying the file matching  "testzone_1/*.txt" (testzone_1/added_by_other_pr.txt),
+        # the file is already merged in the "base"
+        run: '[[ "${{ steps.filter.outputs.test }}" = "false" && "${{ steps.filter.outputs.this_pr }}" = "true" ]]'
     

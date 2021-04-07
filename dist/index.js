@@ -2047,18 +2047,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const exec_1 = __webpack_require__(986);
-function getChangedFiles(baseSha, headSha, cwd) {
+function execForStdOut(commandLine, args, cwd) {
     return __awaiter(this, void 0, void 0, function* () {
         return new Promise((resolve, reject) => {
             try {
-                exec_1.exec('git', ['diff', '--name-only', `${baseSha}..${headSha}`, '--'], {
+                exec_1.exec(commandLine, args, {
                     cwd,
                     listeners: {
-                        stdout: buffer => resolve(buffer
-                            .toString()
-                            .split('\n')
-                            .map(x => x.trim())
-                            .filter(x => x.length > 0))
+                        stdout: buffer => resolve(buffer.toString())
                     }
                 }).catch(reject);
             }
@@ -2066,6 +2062,20 @@ function getChangedFiles(baseSha, headSha, cwd) {
                 reject(err);
             }
         });
+    });
+}
+function getMergeBase(shaA, shaB, cwd) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return execForStdOut('git', ['merge-base', shaA, shaB], cwd);
+    });
+}
+function getChangedFiles(baseSha, headSha, cwd) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const mergeBase = (yield getMergeBase(baseSha, headSha, cwd)).trim();
+        return (yield execForStdOut('git', ['diff', '--name-only', `${mergeBase}..${headSha}`, '--'], cwd))
+            .split('\n')
+            .map(x => x.trim())
+            .filter(x => x.length > 0);
     });
 }
 exports.getChangedFiles = getChangedFiles;
