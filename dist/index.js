@@ -1568,6 +1568,7 @@ function run() {
                 const changed = evaluateRule(r, changedFiles) ? 'true' : 'false';
                 core.debug(`rule: ${r.name}, changed: ${changed}`);
                 core.setOutput(r.name, changed);
+                core.setOutput(`${r.name}_files`, changedFiles.join(' '));
             }
         }
         catch (error) {
