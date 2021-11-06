@@ -37,4 +37,7 @@ jobs:
     - name: Test Doc
       if: steps.filter.outputs.doc == 'true'
       run: ./doc/test.sh
+    - name: Print changed doc files
+      if: steps.filter.outputs.doc == 'true'
+      run: echo "Changed doc files: ${{ step.filter.outputs.doc_files }}"
 ```
