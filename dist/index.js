@@ -1533,7 +1533,7 @@ const rule_1 = __webpack_require__(902);
 const glob_1 = __webpack_require__(85);
 function evaluateRule(rule, changedFiles) {
     const globber = glob_1.newGlobber(rule.match);
-    return changedFiles.find(globber) !== undefined;
+    return changedFiles.filter(globber);
 }
 function getBaseSha(event) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -1565,10 +1565,11 @@ function run() {
             const changedFiles = yield git_1.getChangedFiles(baseSha, headSha);
             core.debug(`changedFiles: ${changedFiles}`);
             for (const r of rules) {
-                const changed = evaluateRule(r, changedFiles) ? 'true' : 'false';
+                const matchedFiles = evaluateRule(r, changedFiles);
+                const changed = matchedFiles.length > 0 ? 'true' : 'false';
                 core.debug(`rule: ${r.name}, changed: ${changed}`);
                 core.setOutput(r.name, changed);
-                core.setOutput(`${r.name}_files`, changedFiles.join(' '));
+                core.setOutput(`${r.name}_files`, matchedFiles.join(' '));
             }
         }
         catch (error) {
