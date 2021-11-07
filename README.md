@@ -41,3 +41,7 @@ jobs:
       if: steps.filter.outputs.doc == 'true'
       run: echo "Changed doc files: ${{ step.filter.outputs.doc_files }}"
 ```
+
+### Contributing
+
+Before creating a pull request make sure to execute ``npm run all``, and also to commit the generated files.
