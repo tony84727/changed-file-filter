@@ -50,7 +50,9 @@ jobs:
         # Override ${{ github.event.pull_request.head.sha }} to HEAD for testing
         head: 'HEAD'
     - name: Check Output
-      run: '[[ "${{ steps.filter.outputs.test }}" = "true" ]]'
+      run: |
+        [[ "${{ steps.filter.outputs.test }}" = "true" ]] &&
+        [[ "${{ steps.filter.outputs.test_files }}" = "testzone/touched.txt" ]]
   # test case of issue #7
   test-3:
     runs-on: ubuntu-latest
@@ -97,4 +99,34 @@ jobs:
         # Although "base" has a additional commit modifying the file matching  "testzone_1/*.txt" (testzone_1/added_by_other_pr.txt),
         # the file is already merged in the "base"
         run: '[[ "${{ steps.filter.outputs.test }}" = "false" && "${{ steps.filter.outputs.this_pr }}" = "true" ]]'
-    
+  test-4:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup Committer Info
+        run: |
+          git config user.name 'Github Action' && \
+          git config user.email 'action@github.com'
+      # add a fake commit
+      - name: Add Commit
+        run: |
+          touch a.txt && \
+          touch b.txt && \
+          git add a.txt b.txt && \
+          git commit -m "add txt files"
+      - uses: ./
+        id: filter
+        with:
+          filters: |
+            test:
+              - *.txt
+            a:
+              - a.txt
+          # Override ${{ github.event.pull_request.head.sha }} to HEAD for testing
+          head: 'HEAD'
+      - name: Check Output
+        run: |
+          [[ "${{ steps.filter.outputs.test }}" = "true" ]] &&
+          [[ "${{ steps.filter.outputs.test_files }}" = "a.txt b.txt" ]] &&
+          [[ "${{ steps.filter.outputs.a }}" = "true" ]] &&
+          [[ "${{ steps.filter.outputs.a_files }}" = "a.txt" ]]
