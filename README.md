@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - uses: tony84727/changed-file-filter@0.0.3
+    - uses: tony84727/changed-file-filter@0.2.0
       id: filter
       with:
         # head: optional head commit SHA, default to ${{ github.event.pull_request.head.sha || github.sha }}
@@ -37,4 +37,11 @@ jobs:
     - name: Test Doc
       if: steps.filter.outputs.doc == 'true'
       run: ./doc/test.sh
+    - name: Print changed doc files
+      if: steps.filter.outputs.doc == 'true'
+      run: echo "Changed doc files: ${{ step.filter.outputs.doc_files }}"
 ```
+
+### Contributing
+
+Before creating a pull request make sure to execute ``npm run all``, and also to commit the generated files.
