@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - uses: tony84727/changed-file-filter@0.2.0
+    - uses: tony84727/changed-file-filter@v0.2.0
       id: filter
       with:
         # head: optional head commit SHA, default to ${{ github.event.pull_request.head.sha || github.sha }}
@@ -40,6 +40,17 @@ jobs:
     - name: Print changed doc files
       if: steps.filter.outputs.doc == 'true'
       run: echo "Changed doc files: ${{ step.filter.outputs.doc_files }}"
+```
+
+### Configuration pitfalls
+
+When configure a rule with a glob starting with a wildcard (e.g. `*.png`). The YAML parser might consider it as a [YAML alias](). Quote the glob to disambiguate.
+
+```yaml
+filters: |
+  doc:
+    # note the quote `'`
+    - '*.txt'
 ```
 
 ### Contributing
