@@ -12,6 +12,7 @@ async function execForStdOut(
         listeners: {
           stdout: buffer => resolve(buffer.toString())
         }
+        // eslint-disable-next-line github/no-then
       }).catch(reject)
     } catch (err) {
       reject(err)
@@ -45,18 +46,8 @@ export async function getChangedFiles(
 }
 
 export async function revParse(rev: string, cwd?: string): Promise<string> {
-  return new Promise((resolve, reject) => {
-    try {
-      exec('git', ['rev-parse', rev], {
-        cwd,
-        listeners: {
-          stdout: buffer => resolve(buffer.toString().trim())
-        }
-      }).catch(reject)
-    } catch (err) {
-      reject(err)
-    }
-  })
+  const output = await execForStdOut('git', ['rev-parse', rev], cwd)
+  return output.trim()
 }
 
 export async function unshallow(): Promise<number> {
