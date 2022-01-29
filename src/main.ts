@@ -1,6 +1,6 @@
 import * as core from '@actions/core'
-import {getChangedFiles, unshallow, revParse} from './git'
 import {Rule, parseRules} from './rule'
+import {getChangedFiles, revParse, unshallow} from './git'
 import {newGlobber} from './glob'
 function evaluateRule(rule: Rule, changedFiles: string[]): string[] {
   const globber = newGlobber(rule.match)

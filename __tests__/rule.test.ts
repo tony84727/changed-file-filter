@@ -1,6 +1,9 @@
 import {parseRules} from '../src/rule'
 import fs from 'fs'
 
+/**
+ * @group unit
+ */
 describe('parseRules', () => {
   it('parses yaml', () => {
     const ruleYaml = fs.readFileSync('testdata/rules.yaml')

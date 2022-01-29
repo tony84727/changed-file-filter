@@ -3,9 +3,13 @@ export interface Rule {
   name: string
   match: string[]
 }
+
 export function parseRules(rule: string): Rule[] {
   const rules = safeLoad(rule)
-  return Object.keys(rules).reduce((acc, c) => {
+  if (typeof rules !== 'object') {
+    throw new Error('expect an map')
+  }
+  return (Object.keys(rules) as (keyof typeof rules)[]).reduce((acc, c) => {
     if (!Array.isArray(rules[c])) {
       throw new Error('expect an array of string')
     }
