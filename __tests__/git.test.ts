@@ -5,6 +5,11 @@ import path from 'path'
 import {getChangedFiles, revParse} from '../src/git'
 import tmp from 'tmp'
 
+/**
+ * git integration test
+ *
+ * @group integration
+ */
 describe('getChangedFiles', () => {
   it('returns changed files between commits', async () => {
     const writeFile = promisify(nodeWriteFile)

@@ -1,5 +1,8 @@
 import {newGlobber} from '../src/glob'
 
+/**
+ * @group unit
+ */
 describe('globber returned by newGlobber', () => {
   interface GlobberTestCase {
     globRules: string[]
