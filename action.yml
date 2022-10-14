@@ -17,7 +17,7 @@ inputs:
   head-ref:
     description: 'ref of the head commit to compare (mainly for testing the action)'
 runs:
-  using: 'node12'
+  using: 'node16'
   main: 'dist/index.js'
 branding:
   color: blue
