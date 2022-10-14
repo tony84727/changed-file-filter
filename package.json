@@ -1,6 +1,6 @@
 {
   "name": "changed-file-filter",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "private": true,
   "description": "Only run Github Action job when specific files changed",
   "main": "lib/main.js",
