@@ -4,7 +4,7 @@ type Globber = (path: string) => boolean
 
 export function newGlobber(rules: string[]): Globber {
   const pattern = createGlobberPattern(rules)
-  return function(name: string) {
+  return function (name: string) {
     return pattern.test(name)
   }
 }

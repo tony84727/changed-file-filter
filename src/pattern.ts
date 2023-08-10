@@ -14,7 +14,7 @@ export function inPlaceReplacer(replaces: Replace[]): Replacer {
     (acc, {from, to}) => ({...acc, [from]: to}),
     {}
   )
-  return function(x: string) {
+  return function (x: string) {
     let matches = undefined
     const toReplace: {
       start: number
