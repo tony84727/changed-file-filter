@@ -1,15 +1,15 @@
-import {safeLoad} from 'js-yaml'
+import {load} from 'js-yaml'
 export interface Rule {
   name: string
   match: string[]
 }
 
 export function parseRules(rule: string): Rule[] {
-  const rules = safeLoad(rule)
+  const rules = load(rule)
   if (typeof rules !== 'object') {
     throw new Error('expect an map')
   }
-  return (Object.keys(rules) as (keyof typeof rules)[]).reduce((acc, c) => {
+  return Object.keys(rules).reduce((acc, c) => {
     if (!Array.isArray(rules[c])) {
       throw new Error('expect an array of string')
     }
