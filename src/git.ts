@@ -49,3 +49,8 @@ export async function revParse(rev: string, cwd?: string): Promise<string> {
   const output = await execForStdOut('git', ['rev-parse', rev], cwd)
   return output.trim()
 }
+
+export async function partialClone(cwd?: string): Promise<void> {
+  await exec('git', ['config', 'origin.promisor', 'true'], {cwd})
+  await exec('git', ['config', 'origin.partialclonefilter', 'blob:none'], {cwd})
+}

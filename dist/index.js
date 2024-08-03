@@ -16,7 +16,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.revParse = exports.getChangedFiles = void 0;
+exports.partialClone = exports.revParse = exports.getChangedFiles = void 0;
 const exec_1 = __nccwpck_require__(1514);
 function execForStdOut(commandLine, args, cwd) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -58,6 +58,13 @@ function revParse(rev, cwd) {
     });
 }
 exports.revParse = revParse;
+function partialClone(cwd) {
+    return __awaiter(this, void 0, void 0, function* () {
+        yield (0, exec_1.exec)('git', ['config', 'origin.promisor', 'true'], { cwd });
+        yield (0, exec_1.exec)('git', ['config', 'origin.partialclonefilter', 'blob:none'], { cwd });
+    });
+}
+exports.partialClone = partialClone;
 
 
 /***/ }),
@@ -161,6 +168,7 @@ function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const event = core.getInput('event');
+            yield (0, git_1.partialClone)();
             const baseSha = yield getBaseSha(event);
             const headSha = yield getHeadSha();
             core.debug(`baseSha: ${baseSha}`);
