@@ -1,6 +1,6 @@
 import * as core from '@actions/core'
 import {Rule, parseRules} from './rule'
-import {getChangedFiles, revParse, unshallow} from './git'
+import {getChangedFiles, revParse} from './git'
 import {newGlobber} from './glob'
 function evaluateRule(rule: Rule, changedFiles: string[]): string[] {
   const globber = newGlobber(rule.match)
@@ -25,7 +25,6 @@ async function getHeadSha(): Promise<string> {
 async function run(): Promise<void> {
   try {
     const event = core.getInput('event')
-    await unshallow()
     const baseSha = await getBaseSha(event)
     const headSha = await getHeadSha()
     core.debug(`baseSha: ${baseSha}`)

@@ -167,7 +167,6 @@ function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const event = core.getInput('event');
-            yield (0, git_1.unshallow)();
             const baseSha = yield getBaseSha(event);
             const headSha = yield getHeadSha();
             core.debug(`baseSha: ${baseSha}`);
