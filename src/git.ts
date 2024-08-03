@@ -49,7 +49,3 @@ export async function revParse(rev: string, cwd?: string): Promise<string> {
   const output = await execForStdOut('git', ['rev-parse', rev], cwd)
   return output.trim()
 }
-
-export async function unshallow(): Promise<number> {
-  return exec('git', ['fetch', '--prune', '--unshallow'])
-}

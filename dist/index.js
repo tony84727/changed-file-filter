@@ -16,7 +16,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.unshallow = exports.revParse = exports.getChangedFiles = void 0;
+exports.revParse = exports.getChangedFiles = void 0;
 const exec_1 = __nccwpck_require__(1514);
 function execForStdOut(commandLine, args, cwd) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -58,12 +58,6 @@ function revParse(rev, cwd) {
     });
 }
 exports.revParse = revParse;
-function unshallow() {
-    return __awaiter(this, void 0, void 0, function* () {
-        return (0, exec_1.exec)('git', ['fetch', '--prune', '--unshallow']);
-    });
-}
-exports.unshallow = unshallow;
 
 
 /***/ }),
