@@ -20,20 +20,8 @@ exports.unshallow = exports.revParse = exports.getChangedFiles = void 0;
 const exec_1 = __nccwpck_require__(1514);
 function execForStdOut(commandLine, args, cwd) {
     return __awaiter(this, void 0, void 0, function* () {
-        return new Promise((resolve, reject) => {
-            try {
-                (0, exec_1.exec)(commandLine, args, {
-                    cwd,
-                    listeners: {
-                        stdout: buffer => resolve(buffer.toString())
-                    }
-                    // eslint-disable-next-line github/no-then
-                }).catch(reject);
-            }
-            catch (err) {
-                reject(err);
-            }
-        });
+        const output = yield (0, exec_1.getExecOutput)(commandLine, args, { cwd });
+        return output.stdout;
     });
 }
 function getMergeBase(shaA, shaB, cwd) {
