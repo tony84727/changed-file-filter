@@ -1,23 +1,12 @@
-import {exec} from '@actions/exec'
+import {exec, getExecOutput} from '@actions/exec'
 
 async function execForStdOut(
   commandLine: string,
   args?: string[],
   cwd?: string
 ): Promise<string> {
-  return new Promise((resolve, reject) => {
-    try {
-      exec(commandLine, args, {
-        cwd,
-        listeners: {
-          stdout: buffer => resolve(buffer.toString())
-        }
-        // eslint-disable-next-line github/no-then
-      }).catch(reject)
-    } catch (err) {
-      reject(err)
-    }
-  })
+  const output = await getExecOutput(commandLine, args, {cwd})
+  return output.stdout
 }
 async function getMergeBase(
   shaA: string,
