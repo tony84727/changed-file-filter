@@ -39,6 +39,6 @@ export async function revParse(rev: string, cwd?: string): Promise<string> {
   return output.trim()
 }
 
-export async function unshallow(): Promise<number> {
-  return exec('git', ['fetch', '--prune', '--unshallow'])
+export async function unshallowHistories(): Promise<number> {
+  return exec('git', ['fetch', '--prune', '--unshallow', '--filter=blob:none'])
 }

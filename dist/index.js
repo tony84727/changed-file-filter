@@ -16,7 +16,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.unshallow = exports.revParse = exports.getChangedFiles = void 0;
+exports.unshallowHistories = exports.revParse = exports.getChangedFiles = void 0;
 const exec_1 = __nccwpck_require__(1514);
 function execForStdOut(commandLine, args, cwd) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -46,12 +46,12 @@ function revParse(rev, cwd) {
     });
 }
 exports.revParse = revParse;
-function unshallow() {
+function unshallowHistories() {
     return __awaiter(this, void 0, void 0, function* () {
-        return (0, exec_1.exec)('git', ['fetch', '--prune', '--unshallow']);
+        return (0, exec_1.exec)('git', ['fetch', '--prune', '--unshallow', '--filter=blob:none']);
     });
 }
-exports.unshallow = unshallow;
+exports.unshallowHistories = unshallowHistories;
 
 
 /***/ }),
@@ -155,7 +155,7 @@ function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const event = core.getInput('event');
-            yield (0, git_1.unshallow)();
+            yield (0, git_1.unshallowHistories)();
             const baseSha = yield getBaseSha(event);
             const headSha = yield getHeadSha();
             core.debug(`baseSha: ${baseSha}`);
