@@ -46,7 +46,7 @@
     "jest-circus": "^27.4.6",
     "jest-expect-message": "^1.0.2",
     "jest-runner-groups": "^2.1.0",
-    "js-yaml": "^4.1.0",
+    "js-yaml": "^4.1.1",
     "lint-staged": "^13.2.3",
     "prettier": "^3.0.1",
     "tmp": "^0.2.4",
